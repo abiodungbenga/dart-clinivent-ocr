@@ -21,8 +21,15 @@ class OcrRepository {
     try {
       const outputBase = 'result';
 
+      String getTesseractPath() {
+        if (Platform.isWindows) {
+          return r'C:\Program Files\Tesseract-OCR\tesseract.exe';
+        }
+        return 'tesseract';
+      }
+
       final process = await Process.run(
-        r'C:\Program Files\Tesseract-OCR\tesseract.exe',
+        getTesseractPath(),
         [imagePath, outputBase, "--psm", "6", "-l", language],
       );
 
