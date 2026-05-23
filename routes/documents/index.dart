@@ -3,7 +3,6 @@ import 'dart:io';
 import 'package:dart_frog/dart_frog.dart';
 
 import '../../core/repositories/docs/docs_repository.dart';
-import '../../core/utils/functions.dart';
 
 Future<Response> onRequest(RequestContext context) {
   // TODO: implement route handler

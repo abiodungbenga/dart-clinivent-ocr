@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:dart_frog/dart_frog.dart';
 
 import '../../../core/repositories/ocr/ocr_repository.dart';
+import '../../../core/utils/functions.dart';
 
 Future<Response> onRequest(RequestContext context) {
   // TODO: implement route handler
@@ -46,7 +47,7 @@ Future<Response> _generateOcr(RequestContext context) async {
   final ocr = context.read<OcrRepository>();
 
   final dirPath = 'uploads/ocr';
-  await ocr.ensureDirExists(dirPath);
+  await Functions.ensureDirExists(dirPath);
 
   final tempPath =
       '$dirPath/${DateTime.now().millisecondsSinceEpoch}_${uploadedFile.name}';

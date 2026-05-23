@@ -42,11 +42,4 @@ class OcrRepository {
       return Future.error(e);
     }
   }
-
-  Future<void> ensureDirExists(String path) async {
-    final dir = Directory(path);
-    if (!await dir.exists()) {
-      await dir.create(recursive: true);
-    }
-  }
 }
