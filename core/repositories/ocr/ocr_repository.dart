@@ -1,5 +1,9 @@
 import 'dart:io';
 
+import 'package:dart_frog/dart_frog.dart';
+
+import '../../utils/functions.dart';
+
 class OcrRepository {
   // Future<String> ocr(String imagePath) async {
   //   final receivePort = ReceivePort();
@@ -17,8 +21,16 @@ class OcrRepository {
   //   sendPort.send(_ocr(imagePath));
   // }
 
-  Future<String> generate(String imagePath, String language) async {
+  Future<String> generate(UploadedFile uploadedFile, String language) async {
     try {
+      final dirPath = 'uploads/ocr';
+      await Functions.ensureDirExists(dirPath);
+
+      final tempPath =
+          '$dirPath/${DateTime.now().millisecondsSinceEpoch}_${uploadedFile.name}';
+
+      final file = File(tempPath);
+      await file.writeAsBytes(await uploadedFile.readAsBytes());
       const outputBase = 'result';
 
       String getTesseractPath() {
@@ -30,14 +42,16 @@ class OcrRepository {
 
       final process = await Process.run(
         getTesseractPath(),
-        [imagePath, outputBase, "--psm", "6", "-l", language],
+        [tempPath, outputBase, "--psm", "6", "-l", language],
       );
 
       if (process.exitCode != 0) {
         throw Exception(process.stderr);
       }
 
-      return File('$outputBase.txt').readAsString();
+      return File('$outputBase.txt')
+          .readAsString()
+          .whenComplete(() => file.delete(recursive: true));
     } catch (e) {
       return Future.error(e);
     }

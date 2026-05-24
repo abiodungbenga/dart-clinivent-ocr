@@ -10,6 +10,14 @@ class DocsRepository {
   //   return doc.text;
   // }
 
+// Future<String> extractPdfText(File file) async {
+//   final stream = ByteStream(file.readAsBytesSync());
+// final doc = await PDFParser(stream).parse();
+// final catalog = await doc.catalog;
+
+//   return catalog.dictionary.;
+// }
+
   Future<String> extractFromDocs(UploadedFile uploadedFile) async {
     try {
       final dirPath = 'uploads/extract';
@@ -21,9 +29,14 @@ class DocsRepository {
       final file = File(tempPath);
       await file.writeAsBytes(await uploadedFile.readAsBytes());
       if (file.path.endsWith('.pdf')) {
-        return Future.value('Not available yet!');
+        return Future.value("Not available for PDF")
+            .whenComplete(() => file.delete(
+                  recursive: true,
+                ));
       } else {
-        return readTxtFile(file.path).whenComplete(() => file.delete());
+        return readTxtFile(file.path).whenComplete(() => file.delete(
+              recursive: true,
+            ));
       }
     } catch (e) {
       return Future.error(e);
